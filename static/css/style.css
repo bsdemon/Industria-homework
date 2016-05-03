@@ -1,0 +1,52 @@
+/* navbar */
+.navbar-default {
+    background-color: #3A95FF;
+    border-color: #3171c5;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: black;
+    background-color: #3171c5;
+}
+
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > li > a:hover {
+    background-color: #3a7ee5;
+}
+
+/* title */
+.navbar-default .navbar-brand {
+    color: black;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #5E5E5E;
+}
+
+/* link */
+.navbar-default .navbar-nav > li > a {
+    color: black;
+}
+
+body {
+    background-color: rgba(11, 179, 255, 0.16);
+}
+
+table {
+    border-collapse: collapse;
+
+}
+.table-bordered,
+.table-bordered>tbody>tr>td,
+.table-bordered>thead>tr>td{
+    border-color: cornflowerblue;
+}
+
+td {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+

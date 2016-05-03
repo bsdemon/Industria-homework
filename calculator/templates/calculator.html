@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+<!--{% load crispy_forms_tags %}}-->
+
+
+{% block content %}
+
+<div class="row col-md-2">
+  <form method="post" action="/" id="calc-form">
+
+    <div class="form-group">
+      <label for="first_select">От валута</label>
+      <select name="first_select" id="first_select" form="calc-form" class="form-control">
+        <option label=" "></option>
+        {% for currency in currency_list %}
+        <option value={{currency.cost_leva}}>{{currency.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="second_select">Във валута</label>
+      <select name="second_select" id="second_select" form="calc-form" class="form-control">
+        <option label=" "></option>
+        {% for currency in currency_list %}
+        <option value={{currency.reverse_cost}}>{{currency.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="units">Сума</label>
+      {% csrf_token %}
+      <input type="text" name="units" id="units" class="form-control">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Calculate">
+    <div>
+      <a class="btn btn-default" href="#" role="button">{{result}}</a>
+    </div>
+
+  </form>
+
+
+
+</div>
+
+
+<div class="row">
+  <div class="col-md-6 table-responsive">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <td>Валута</td>
+        <td>Код</td>
+        <td>За единици валута</td>
+        <td>Лева</td>
+        <td>За 1 лев</td>
+      </tr>
+      </thead>
+      <tbody>
+      {% for currency in currency_list %}
+      <tr>
+        <td>{{currency.name}}</td>
+        <td>{{currency.code}}</td>
+        <td>{{currency.units}}</td>
+        <td>{{currency.cost_leva}}</td>
+        <td>{{currency.reverse_cost}}</td>
+      </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock content %}
