@@ -8,20 +8,21 @@ from decimal import *
 
 def currency_home(request):
     queryset = Currency.objects.all()
-    choose_form = ChooseForm(request.POST or None)
-    cost_leva = request.POST.get('first_select') or 0
-    reverse_cost = request.POST.get('second_select') or 0
-    units = request.POST.get('units') or 0
+
     result = 0
-    if cost_leva and reverse_cost and units is not None:
-        result = round(Decimal(units)* Decimal(cost_leva) * Decimal(reverse_cost),6)
+    form = ChooseForm(request.POST or None)
+    if form.is_valid():
+        cost_leva = form.cleaned_data.get('from_currency')
+        reverse_cost = form.cleaned_data.get('to_currency')
+        units = form.cleaned_data.get('units')
+        result = round(Decimal(units) * Decimal(cost_leva) * Decimal(reverse_cost), 6)
+
     context = {
         "title": "Currency list",
         "currency_list": queryset,
-        "form": choose_form,
+        "form": form,
         "result": result
     }
-    print(result)
     return render(request, "calculator.html", context)
 
 
@@ -36,10 +37,9 @@ def add_currency(request):
         instance.reverse_cost = form.cleaned_data.get("reverse_cost")
         instance.save()
         return HttpResponseRedirect('/add')
+
     context = {
         "title": "Add currency",
         "form": form
     }
     return render(request, "add.html", context)
-
-

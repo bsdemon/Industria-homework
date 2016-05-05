@@ -1,46 +1,21 @@
 {% extends "base.html" %}
-<!--{% load crispy_forms_tags %}}-->
+{% load crispy_forms_tags %}}
 
 
 {% block content %}
 
-<div class="row col-md-2">
-  <form method="post" action="/" id="calc-form">
-
-    <div class="form-group">
-      <label for="first_select">От валута</label>
-      <select name="first_select" id="first_select" form="calc-form" class="form-control">
-        <option label=" "></option>
-        {% for currency in currency_list %}
-        <option value={{currency.cost_leva}}>{{currency.name}}</option>
-        {% endfor %}
-      </select>
+<div class="row col-md-4">
+  <div class="row">
+    <div class="col-md-8">
+      <form method="post" action="">{% csrf_token %}
+        {{ form|crispy }}
+        <input class="btn btn-primary" type="submit" value="Calculate">
+      </form>
+      <div>
+        <a class="btn btn-default" href="#" role="button">{{result}}</a>
+      </div>
     </div>
-
-    <div class="form-group">
-      <label for="second_select">Във валута</label>
-      <select name="second_select" id="second_select" form="calc-form" class="form-control">
-        <option label=" "></option>
-        {% for currency in currency_list %}
-        <option value={{currency.reverse_cost}}>{{currency.name}}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="units">Сума</label>
-      {% csrf_token %}
-      <input type="text" name="units" id="units" class="form-control">
-    </div>
-    <input class="btn btn-primary" type="submit" value="Calculate">
-    <div>
-      <a class="btn btn-default" href="#" role="button">{{result}}</a>
-    </div>
-
-  </form>
-
-
-
+  </div>
 </div>
 
 
