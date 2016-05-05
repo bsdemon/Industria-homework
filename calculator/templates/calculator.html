@@ -7,12 +7,13 @@
 <div class="row col-md-4">
   <div class="row">
     <div class="col-md-8">
-      <form method="post" action="">{% csrf_token %}
+      <form method="post" action="" id="calc">{% csrf_token %}
         {{ form|crispy }}
         <input class="btn btn-primary" type="submit" value="Calculate">
       </form>
       <div>
-        <a class="btn btn-default" href="#" role="button">{{result}}</a>
+        <a class="btn btn-default" href="#" role="button" id="calc-result">0</a>
+        <span id="calc-result-currency"></span>
       </div>
     </div>
   </div>

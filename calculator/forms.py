@@ -49,13 +49,15 @@ class ChooseForm(forms.Form):
 
     from_currency = forms.CharField(max_length=20,
                                     widget=forms.Select(
-                                        choices=((ch.cost_leva, ch.name) for ch in CHOICES)))
+                                        choices=((ch.cost_leva, ch.name) for ch in CHOICES),
+                                        attrs={'id': 'from-currency'}))
 
     to_currency = forms.CharField(max_length=20,
                                   widget=forms.Select(
-                                      choices=((ch.reverse_cost, ch.name) for ch in CHOICES)))
+                                      choices=((ch.reverse_cost, ch.name) for ch in CHOICES),
+                                      attrs={'id': 'to-currency'}))
 
-    units = forms.IntegerField()
+    units = forms.IntegerField(widget=forms.NumberInput(attrs={'id': 'units'}))
 
     def __init__(self, *args, **kwargs):
         super(ChooseForm, self).__init__(*args, **kwargs)
