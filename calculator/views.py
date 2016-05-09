@@ -11,12 +11,15 @@ def currency_home(request):
 
     result = 0
     form = ChooseForm(request.POST or None)
+    usd = Currency.objects.get(name='Щатски долар')
+    usd.refresh_from_db()
     if form.is_valid():
         cost_leva = form.cleaned_data.get('from_currency')
-        reverse_cost = form.cleaned_data.get('to_currency')
+        to_currency = form.cleaned_data.get('to_currency')
         units = form.cleaned_data.get('units')
-        result = round(Decimal(units) * Decimal(cost_leva) * Decimal(reverse_cost), 6)
-
+        result = round(Decimal(units) * Decimal(cost_leva) * 1/Decimal(to_currency), 6)
+    else:
+        print('form is not valid!!!!!!!!!!!!!!!!!!!!')
     context = {
         "title": "Currency list",
         "currency_list": queryset,

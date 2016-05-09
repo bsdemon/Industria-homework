@@ -45,22 +45,17 @@ class CurrencyForm(forms.ModelForm):
 
 
 class ChooseForm(forms.Form):
-    CHOICES = Currency.objects.all()
-
-    from_currency = forms.CharField(max_length=20,
-                                    widget=forms.Select(
-                                        choices=((ch.cost_leva, ch.name) for ch in CHOICES)))
-
-    to_currency = forms.CharField(max_length=20,
-                                  widget=forms.Select(
-                                      choices=((ch.reverse_cost, ch.name) for ch in CHOICES)))
-
-    units = forms.IntegerField()
 
     def __init__(self, *args, **kwargs):
         super(ChooseForm, self).__init__(*args, **kwargs)
-        self.fields['from_currency'].label = "От валута"
-        self.fields['to_currency'].label = "Във валута"
+        self.fields['from_currency'] = forms.ChoiceField(
+            choices=get_my_choices(),
+            label='От валута')
+        self.fields['to_currency'] = forms.ChoiceField(
+            choices=get_my_choices(),
+            label="Във валута")
+
+    units = forms.IntegerField(label='Единици')
 
     def clean_units(self):
         units = self.cleaned_data.get('units')
@@ -73,3 +68,15 @@ class ChooseForm(forms.Form):
     def clean_to_currency(self):
         to_currency = self.cleaned_data.get('to_currency')
         return to_currency
+
+
+def get_my_choices():
+    queryset = Currency.objects.all()
+    choices = []
+    for query in queryset:
+        choice = (query.cost_leva, query.name)
+        choices.append(choice)
+    print(choices)
+    return choices
+
+
