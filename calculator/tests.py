@@ -8,6 +8,7 @@ import unittest
 
 
 class CurrencyTest(TestCase):
+
     def create_currency(self, name="Щатски долар",
                         code="USD",
                         units=1,
