@@ -1,5 +1,8 @@
 from django.test import TestCase
+from django.http import HttpRequest
 from .models import Currency
+from .views import currency_home, add_currency
+import unittest
 
 # Create your tests here.
 
@@ -20,3 +23,13 @@ class CurrencyTest(TestCase):
         c = self.create_currency()
         self.assertTrue(isinstance(c, Currency))
         self.assertEqual(c.__str__(), c.name)
+
+
+class HomePageViewTest(TestCase):
+
+    def test_home_page_returns_correct_html(self):
+        request = HttpRequest()
+        response = currency_home(request)
+        self.assertIn('<title>Currency list</title>', response.content.decode('utf8'))
+        self.assertTrue(response.content.strip().startswith(b'<!DOCTYPE html>'))
+        self.assertTrue(response.content.strip().endswith(b'</html>'))

@@ -1,2 +1,5 @@
 Django==1.9.5
 django-crispy-forms==1.6.0
+selenium==2.53.2
+selenium==2.53.2
+lxml==3.6.0
