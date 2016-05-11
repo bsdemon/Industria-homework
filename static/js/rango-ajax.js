@@ -1,28 +1,67 @@
 'use strict';
-/**
- * Created by eon on 4/28/16.
- */
+
 $(document).ready(function () {
-        
-    $('#calc').on('submit', function (event) {
+
+    $('#calc-form').on('submit', function (event) {
         event.preventDefault();
         calculate();
     });
 
     function calculate() {
-        var from_currency, to_currency, units, result = 0;
-
-        from_currency = $('#from-currency').val();
-        to_currency = $('#to-currency').val();
-        units = $('#units').val();
-        var currency_name = $('#to-currency option:selected').text();
+        console.log('Calculate working!');
+        var csrftoken = getCookie('csrftoken');
         
-        if (from_currency != 0 && to_currency != 0 && units != 0){
-            result  = Math.round(units * from_currency * to_currency*100000)/100000;
-        }
+        var from_currency = $('#id_from_currency').find('option:selected').val();
+        var to_currency = $('#id_to_currency').find('option:selected').val();
+        var units = $('#id_units').val();
+        
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
 
-        $('#calc-result').html(result);
-        $('#calc-result-currency').text(currency_name+'и')
+        $.ajax({
+            url: "calc/",
+            type: "POST",
+            data: {
+                from_currency : from_currency,
+                to_currency : to_currency,
+                units : units
+            },
+
+            success: function (data) {
+                $('#calc-result').text(data);
+            },
+
+            error: function (xhr, errmsg) {
+                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            }
+        });
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 });
 

@@ -1,7 +1,8 @@
-from django.shortcuts import render,HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from .forms import CurrencyForm, ChooseForm
 from .models import Currency
 from decimal import *
+from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 
@@ -15,6 +16,7 @@ def currency_home(request):
         "currency_list": queryset,
         "form": form,
     }
+
     return render(request, "calculator.html", context)
 
 
@@ -35,3 +37,43 @@ def add_currency(request):
         "form": form
     }
     return render(request, "add.html", context)
+
+
+@csrf_protect
+def ajax_calc(request):
+    result = 0
+    # result = calculate(units, from_currency_name, to_currency_name)
+
+    if request.method == "POST":
+        if request.is_ajax():
+            from_currency_name = request.POST.get('from_currency')
+            to_currency_name = request.POST.get('to_currency')
+            units = request.POST.get('units')
+
+            result = calculate(units, from_currency_name, to_currency_name)
+
+    return HttpResponse(result)
+
+
+def get_actual_currency(currency):
+    currency_obj = Currency.objects.get(name=currency)
+    currency_obj.refresh_from_db()
+    return currency_obj
+
+
+def calculate(units, from_currency_name, to_currency_name):
+    from_currency_obj = get_actual_currency(from_currency_name)
+    to_currency_obj = get_actual_currency(to_currency_name)
+
+    from_currency_cost = Decimal(from_currency_obj.cost_leva)
+    from_currency_units = Decimal(from_currency_obj.units)
+    to_currency_cost = Decimal(to_currency_obj.cost_leva)
+    to_currency_units = Decimal(to_currency_obj.units)
+    units = Decimal(units)
+
+    print(from_currency_cost, from_currency_units, to_currency_cost, to_currency_units , units)
+    result = round(units
+                   * from_currency_cost / from_currency_units
+                   / to_currency_cost / to_currency_units, 6)
+
+    return result
