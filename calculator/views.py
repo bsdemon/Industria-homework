@@ -42,15 +42,16 @@ def add_currency(request):
 @csrf_protect
 def ajax_calc(request):
     result = 0
-    # result = calculate(units, from_currency_name, to_currency_name)
 
     if request.method == "POST":
+        form = ChooseForm(request.POST or None)
         if request.is_ajax():
-            from_currency_name = request.POST.get('from_currency')
-            to_currency_name = request.POST.get('to_currency')
-            units = request.POST.get('units')
+            if form.is_valid():
+                from_currency_name = form.cleaned_data.get('from_currency')
+                to_currency_name = form.cleaned_data.get('to_currency')
+                units = form.cleaned_data.get('units')
 
-            result = calculate(units, from_currency_name, to_currency_name)
+                result = calculate(units, from_currency_name, to_currency_name)
 
     return HttpResponse(result)
 
@@ -71,7 +72,6 @@ def calculate(units, from_currency_name, to_currency_name):
     to_currency_units = Decimal(to_currency_obj.units)
     units = Decimal(units)
 
-    print(from_currency_cost, from_currency_units, to_currency_cost, to_currency_units , units)
     result = round(units
                    * from_currency_cost / from_currency_units
                    / to_currency_cost / to_currency_units, 6)

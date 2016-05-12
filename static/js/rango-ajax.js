@@ -8,7 +8,6 @@ $(document).ready(function () {
     });
 
     function calculate() {
-        console.log('Calculate working!');
         var csrftoken = getCookie('csrftoken');
         
         var from_currency = $('#id_from_currency').find('option:selected').val();
@@ -23,14 +22,11 @@ $(document).ready(function () {
             }
         });
 
+
         $.ajax({
             url: "calc/",
             type: "POST",
-            data: {
-                from_currency : from_currency,
-                to_currency : to_currency,
-                units : units
-            },
+            data: $('#calc-form').serialize(),
 
             success: function (data) {
                 $('#calc-result').text(data);
